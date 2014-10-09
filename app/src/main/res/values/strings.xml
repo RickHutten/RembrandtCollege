@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Rembrandt College</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="rembrandt_college">Rembrandt College</string>
+    <string name="drawer_open">drawer open</string>
+    <string name="drawer_close">drawer close</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>
