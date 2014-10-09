@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentTransaction;
@@ -17,6 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -33,8 +36,10 @@ import java.util.ArrayList;
 public class NewsActivity extends ActionBarActivity {
 
     final private static String XML_URL = "http://www.rembrandt-college.nl/rss.php";
-    //final private static String XML_URL = "http://www.nu.nl/feeds/rss/algemeen.rss";
     final private static String FILE_NAME = "XML";
+    final private static String REMBRANDT_URL = "http://www.rembrandt-college.nl";
+    final private static String FACEBOOK_URL = "https://www.facebook.com/RembrandtCollege";
+    final private static String TWITTER_URL = "https://twitter.com/Rembrandt_Coll";
 
     ArrayList<ArrayList<String>> entries = new ArrayList<ArrayList<String>>();
     XmlPullParser parser;
@@ -63,7 +68,23 @@ public class NewsActivity extends ActionBarActivity {
         rembrandt_knop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startInternetActivity();
+                startInternetActivity(REMBRANDT_URL);
+            }
+        });
+
+        RelativeLayout facebook_knop = (RelativeLayout) findViewById(R.id.facebook_knop);
+        facebook_knop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startInternetActivity(FACEBOOK_URL);
+            }
+        });
+
+        RelativeLayout twitter_knop = (RelativeLayout) findViewById(R.id.twitter_knop);
+        twitter_knop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startInternetActivity(TWITTER_URL);
             }
         });
 
@@ -90,18 +111,13 @@ public class NewsActivity extends ActionBarActivity {
         drawer_toggle.onConfigurationChanged(newConfig);
     }
 
-    public void startInternetActivity() {
+    public void startInternetActivity(String url) {
         drawer_layout.closeDrawers();
-        Intent internet_intent = new Intent(NewsActivity.this, InternetActivity.class);
+        Intent internet_intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         NewsActivity.this.startActivity(internet_intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
-    // Uses AsyncTask to create a task away from the main UI thread. This task takes a
-    // URL string and uses it to create an HttpUrlConnection. Once the connection
-    // has been established, the AsyncTask downloads the contents of the webpage as
-    // an InputStream. Finally, the InputStream is converted into a string, which is
-    // displayed in the UI by the AsyncTask's onPostExecute method.
     private class downloadWebPageTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... urls) {
@@ -109,21 +125,25 @@ public class NewsActivity extends ActionBarActivity {
                 // params comes from the execute() call: params[0] is the url.
                 try {
                     downloadFromUrl(urls[0]);
-                    return "File downloaded without errors.";
+                    return "No errors";
                 } catch (IOException e) {
                     e.printStackTrace();
-                    return "Unable to retrieve web page. URL may be invalid.";
+                    return getResources().getString(R.string.unable_to_retrieve_webpage);
                 }
             } else {
-                return "No internet connection.";
+                return getResources().getString(R.string.no_internet_connection);
             }
         }
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-            TextView textView = (TextView) findViewById(R.id.connectivity);
-            textView.setText(result);
-            //printXML();
+            Log.i("Internet status", result);
+            if (!result.equals("No errors")) {
+                int duration = Toast.LENGTH_LONG;
+                Toast toast = Toast.makeText(getApplicationContext(), result, duration);
+                toast.show();
+            }
+
             try {
                 entries = setEntries();
             } catch (Exception e) {
@@ -132,8 +152,6 @@ public class NewsActivity extends ActionBarActivity {
 
         }
     }
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -146,7 +164,6 @@ public class NewsActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 
     // Given a URL, establishes an HttpUrlConnection and retrieves
     // the web page content as a InputStream, which it returns as

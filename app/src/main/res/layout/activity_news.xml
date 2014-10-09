@@ -14,11 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <TextView
-            android:id="@+id/connectivity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
         <ListView
             android:id="@android:id/list"
             android:layout_width="match_parent"
@@ -33,14 +28,19 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:choiceMode="singleChoice"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
+        android:divider="@color/black"
+        android:dividerHeight="1dp"
         android:background="@color/white">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/light_gray" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -49,11 +49,12 @@
                 android:id="@+id/rembrandt_knop">
 
                 <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_margin="6dp"
-                    android:id="@+id/item1_img"
+                    android:layout_width="54dp"
+                    android:layout_height="54dp"
+                    android:layout_margin="9dp"
+                    android:id="@+id/rembrandt_img"
                     android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
                     android:src="@drawable/logo"
                     android:contentDescription="@null"/>
 
@@ -63,57 +64,79 @@
                     android:text="@string/rembrandt_college"
                     android:textSize="25sp"
                     android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/item1_img" />
+                    android:layout_toRightOf="@id/rembrandt_img"
+                    android:layout_toEndOf="@+id/rembrandt_img"/>
 
             </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/light_gray" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
-                android:background="@color/green">
+                android:background="@color/white"
+                android:id="@+id/facebook_knop">
 
                 <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_margin="6dp"
-                    android:id="@+id/item2_img"
+                    android:layout_width="54dp"
+                    android:layout_height="54dp"
+                    android:layout_margin="9dp"
+                    android:id="@+id/facebook_img"
                     android:layout_alignParentLeft="true"
-                    android:src="@color/black_overlay"
+                    android:layout_alignParentStart="true"
+                    android:src="@drawable/facebook"
                     android:contentDescription="@null"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Twitterie"
+                    android:text="@string/facebook"
                     android:textSize="25sp"
                     android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/item2_img" />
+                    android:layout_toRightOf="@id/facebook_img"
+                    android:layout_toEndOf="@+id/facebook_img"/>
 
             </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/light_gray" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
-                android:background="@color/orange">
+                android:background="@color/white"
+                android:id="@+id/twitter_knop">
 
                 <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_margin="6dp"
-                    android:id="@+id/item3_img"
+                    android:layout_width="54dp"
+                    android:layout_height="54dp"
+                    android:layout_margin="9dp"
+                    android:id="@+id/twitter_img"
                     android:layout_alignParentLeft="true"
-                    android:src="@color/black_overlay"
+                    android:layout_alignParentStart="true"
+                    android:src="@drawable/twitter"
                     android:contentDescription="@null"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Facebookie"
+                    android:text="@string/twitter"
                     android:textSize="25sp"
                     android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/item3_img" />
+                    android:layout_toRightOf="@id/twitter_img"
+                    android:layout_toEndOf="@+id/twitter_img"/>
 
             </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/light_gray" />
 
         </LinearLayout>
 
