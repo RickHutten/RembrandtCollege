@@ -41,4 +41,8 @@ Voor het weergeven en knippen van afbeeldingen wordt gebruik gemaakt van android
 android.content.Intent voor het overschakelen naar een nieuwe activity
 android.support.v4.app.Fragment voor het gebruik van fragments
 
+Mockup
+---
+![](doc/mockup.png)
+
 
