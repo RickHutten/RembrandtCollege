@@ -16,10 +16,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -63,6 +63,11 @@ public class NewsActivity extends ActionBarActivity {
                 super.onDrawerOpened(drawerView);
             }
         };
+        // Set the drawer toggle as the DrawerListener
+        drawer_layout.setDrawerListener(drawer_toggle);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         RelativeLayout rembrandt_knop = (RelativeLayout) findViewById(R.id.rembrandt_knop);
         rembrandt_knop.setOnClickListener(new View.OnClickListener() {
@@ -88,14 +93,7 @@ public class NewsActivity extends ActionBarActivity {
             }
         });
 
-        // Set the drawer toggle as the DrawerListener
-        drawer_layout.setDrawerListener(drawer_toggle);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-
-        new downloadWebPageTask().execute(XML_URL);
-
+        new DownloadWebPageTask().execute(XML_URL);
     }
 
     @Override
@@ -118,21 +116,28 @@ public class NewsActivity extends ActionBarActivity {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
-    private class downloadWebPageTask extends AsyncTask<String, Void, String> {
+    private class DownloadWebPageTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... urls) {
+            String msg;
             if (hasInternetConnection(getApplicationContext())) {
                 // params comes from the execute() call: params[0] is the url.
                 try {
                     downloadFromUrl(urls[0]);
-                    return "No errors";
+                    msg = "No errors";
                 } catch (IOException e) {
                     e.printStackTrace();
-                    return getResources().getString(R.string.unable_to_retrieve_webpage);
+                    msg = getResources().getString(R.string.unable_to_retrieve_webpage);
                 }
             } else {
-                return getResources().getString(R.string.no_internet_connection);
+                msg = getResources().getString(R.string.no_internet_connection);
             }
+            try {
+                entries = getEntries();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return msg;
         }
         // onPostExecute displays the results of the AsyncTask.
         @Override
@@ -143,13 +148,6 @@ public class NewsActivity extends ActionBarActivity {
                 Toast toast = Toast.makeText(getApplicationContext(), result, duration);
                 toast.show();
             }
-
-            try {
-                entries = setEntries();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
         }
     }
 
@@ -215,7 +213,7 @@ public class NewsActivity extends ActionBarActivity {
         return (networkInfo != null && networkInfo.isConnected());
     }
 
-    private ArrayList<ArrayList<String>> setEntries() throws XmlPullParserException, IOException {
+    private ArrayList<ArrayList<String>> getEntries() throws XmlPullParserException, IOException {
 
         ArrayList<ArrayList<String>> entries = new ArrayList<ArrayList<String>>();
         File file = new File(getCacheDir(), FILE_NAME);
