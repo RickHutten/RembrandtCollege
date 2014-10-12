@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="96dp" >
+    android:layout_width="match_parent" android:layout_height="124dp" >
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/adapter_image"
+        android:contentDescription="@null"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@drawable/black_background_gradient" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/title"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="30dp"
+        android:id="@+id/adapter_title"
+        android:padding="10dp"
         android:layout_alignParentTop="true"
-        android:background="@drawable/black_background_gradient"
         android:text="Title"
         android:textColor="@color/white"
         android:textSize="25sp"/>
