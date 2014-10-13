@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">Rembrandt College</string>
-    <string name="hello_world">Hello world!</string>
     <string name="rembrandt_college">Rembrandt College</string>
     <string name="unable_to_retrieve_webpage">Kan nieuws niet laden</string>
     <string name="no_internet_connection">Geen internetverbinding</string>
     <string name="twitter">Twitter</string>
     <string name="facebook">Facebook</string>
-
 </resources>

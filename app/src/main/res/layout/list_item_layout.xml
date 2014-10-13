@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="124dp" >
+    android:layout_width="match_parent" android:layout_height="@dimen/list_item_height" >
 
     <ImageView
         android:layout_width="match_parent"
@@ -20,7 +20,6 @@
         android:id="@+id/adapter_title"
         android:padding="10dp"
         android:layout_alignParentTop="true"
-        android:text="Title"
         android:textColor="@color/white"
         android:textSize="25sp"/>
 

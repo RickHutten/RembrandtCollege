@@ -31,7 +31,6 @@ public class DownloadWebPageTask extends AsyncTask<String, Void, String> {
     ListView list_view;
     ArrayList<ArrayList<String>> entries = new ArrayList<ArrayList<String>>();
     XmlPullParser parser;
-    String msg;
 
     public DownloadWebPageTask(Context context, ListView list_view) {
         this.context = context;
@@ -74,9 +73,6 @@ public class DownloadWebPageTask extends AsyncTask<String, Void, String> {
         list_view.setAdapter(my_adapter);
     }
 
-    public ArrayList<ArrayList<String>> getEntries() {
-        return entries;
-    }
     // Given a URL, establishes an HttpUrlConnection and retrieves
     // the web page content as a InputStream, which it returns as
     // a string.
@@ -171,8 +167,8 @@ public class DownloadWebPageTask extends AsyncTask<String, Void, String> {
         String title;
         String link = null;
         String pub_date = null;
-        String guid = null;
-        String content = null;
+        String guid;
+        String content;
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -180,13 +176,13 @@ public class DownloadWebPageTask extends AsyncTask<String, Void, String> {
             }
             String name = parser.getName();
             if (name.equals("title")) {
-                title = getTitle(parser);
+                title = getFromTag(parser, "title");
                 items.add(title);
             } else if (name.equals("guid")) {
-                guid = getGuid(parser);
+                guid = getFromTag(parser, "guid");
                 items.add(guid);
             } else if (name.equals("content:encoded")) {
-                content = getContent(parser);
+                content = getFromTag(parser, "content:encoded");
                 items.add(content);
             } else {
                 skip(parser);
@@ -196,25 +192,11 @@ public class DownloadWebPageTask extends AsyncTask<String, Void, String> {
         return items;
     }
 
-    private String getTitle(XmlPullParser parser) throws IOException, XmlPullParserException {
-        parser.require(XmlPullParser.START_TAG, null, "title");
-        String title = readText(parser);
-        parser.require(XmlPullParser.END_TAG, null, "title");
-        return title;
-    }
-
-    private String getGuid(XmlPullParser parser) throws IOException, XmlPullParserException {
-        parser.require(XmlPullParser.START_TAG, null, "guid");
-        String guid = readText(parser);
-        parser.require(XmlPullParser.END_TAG, null, "guid");
-        return guid;
-    }
-
-    private String getContent(XmlPullParser parser) throws IOException, XmlPullParserException {
-        parser.require(XmlPullParser.START_TAG, null, "content:encoded");
-        String content = readText(parser);
-        parser.require(XmlPullParser.END_TAG, null, "content:encoded");
-        return content;
+    private String getFromTag(XmlPullParser parser, String tag) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, null, tag);
+        String text = readText(parser);
+        parser.require(XmlPullParser.END_TAG, null, tag);
+        return text;
     }
 
     // Copied from "http://developer.android.com/training/basics/network-ops/xml.html"
