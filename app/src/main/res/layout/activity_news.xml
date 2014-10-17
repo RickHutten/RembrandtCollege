@@ -7,21 +7,13 @@
     tools:context=".NewsActivity" >
 
     <!-- The main content view -->
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/content_frame"
         android:background="@color/white"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <ListView
-            android:id="@+id/list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:dividerHeight="5dp"
-            android:divider="@color/white"/>
-
-    </LinearLayout>
+    </RelativeLayout>
 
     <!-- The navigation drawer -->
     <ScrollView android:id="@+id/left_drawer"
@@ -45,14 +37,14 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="72dp"
+                android:layout_height="@dimen/navigation_drawer_item_height"
                 android:background="@color/white"
                 android:id="@+id/rembrandt_knop">
 
                 <ImageView
-                    android:layout_width="54dp"
-                    android:layout_height="54dp"
-                    android:layout_margin="9dp"
+                    android:layout_width="@dimen/navigation_drawer_image_width"
+                    android:layout_height="@dimen/navigation_drawer_image_height"
+                    android:layout_margin="@dimen/navigation_drawer_image_margin"
                     android:id="@+id/rembrandt_img"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
@@ -63,7 +55,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/rembrandt_college"
-                    android:textSize="25sp"
+                    android:textSize="@dimen/navigation_drawer_text_size"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@id/rembrandt_img"
                     android:layout_toEndOf="@+id/rembrandt_img"/>
@@ -77,14 +69,14 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="72dp"
+                android:layout_height="@dimen/navigation_drawer_item_height"
                 android:background="@color/white"
                 android:id="@+id/facebook_knop">
 
                 <ImageView
-                    android:layout_width="54dp"
-                    android:layout_height="54dp"
-                    android:layout_margin="9dp"
+                    android:layout_width="@dimen/navigation_drawer_image_width"
+                    android:layout_height="@dimen/navigation_drawer_image_height"
+                    android:layout_margin="@dimen/navigation_drawer_image_margin"
                     android:id="@+id/facebook_img"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
@@ -95,7 +87,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/facebook"
-                    android:textSize="25sp"
+                    android:textSize="@dimen/navigation_drawer_text_size"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@id/facebook_img"
                     android:layout_toEndOf="@+id/facebook_img"/>
@@ -109,14 +101,14 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="72dp"
+                android:layout_height="@dimen/navigation_drawer_item_height"
                 android:background="@color/white"
                 android:id="@+id/twitter_knop">
 
                 <ImageView
-                    android:layout_width="54dp"
-                    android:layout_height="54dp"
-                    android:layout_margin="9dp"
+                    android:layout_width="@dimen/navigation_drawer_image_width"
+                    android:layout_height="@dimen/navigation_drawer_image_height"
+                    android:layout_margin="@dimen/navigation_drawer_image_margin"
                     android:id="@+id/twitter_img"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
@@ -127,10 +119,74 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/twitter"
-                    android:textSize="25sp"
+                    android:textSize="@dimen/navigation_drawer_text_size"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@id/twitter_img"
                     android:layout_toEndOf="@+id/twitter_img"/>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/light_gray" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/navigation_drawer_item_height"
+                android:background="@color/white"
+                android:id="@+id/magister_knop">
+
+                <ImageView
+                    android:layout_width="@dimen/navigation_drawer_image_width"
+                    android:layout_height="@dimen/navigation_drawer_image_height"
+                    android:layout_margin="@dimen/navigation_drawer_image_margin"
+                    android:id="@+id/magister_img"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:src="@drawable/magister"
+                    android:contentDescription="@null"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/magister"
+                    android:textSize="@dimen/navigation_drawer_text_size"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/magister_img"
+                    android:layout_toEndOf="@+id/magister_img"/>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/light_gray" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/navigation_drawer_item_height"
+                android:background="@color/white"
+                android:id="@+id/itslearning_knop">
+
+                <ImageView
+                    android:layout_width="@dimen/navigation_drawer_image_width"
+                    android:layout_height="@dimen/navigation_drawer_image_height"
+                    android:layout_margin="@dimen/navigation_drawer_image_margin"
+                    android:id="@+id/itslearning_img"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:src="@drawable/itslearning"
+                    android:contentDescription="@null"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/itslearning"
+                    android:textSize="@dimen/navigation_drawer_text_size"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/itslearning_img"
+                    android:layout_toEndOf="@+id/itslearning_img"/>
 
             </RelativeLayout>
 

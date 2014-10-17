@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/adapter_image"
-        android:contentDescription="@null"/>
+        android:contentDescription="@null" />
 
     <View
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
         android:background="@drawable/black_background_gradient" />
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/adapter_title"
         android:padding="10dp"

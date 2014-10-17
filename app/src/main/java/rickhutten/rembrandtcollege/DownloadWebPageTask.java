@@ -1,9 +1,11 @@
 package rickhutten.rembrandtcollege;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.util.Xml;
 import android.widget.ListAdapter;
@@ -27,14 +29,14 @@ public class DownloadWebPageTask extends AsyncTask<String, Void, String> {
 
     final private static String FILE_NAME = "XML";
 
+    Fragment fragment;
     Context context;
-    ListView list_view;
     ArrayList<ArrayList<String>> entries = new ArrayList<ArrayList<String>>();
     XmlPullParser parser;
 
-    public DownloadWebPageTask(Context context, ListView list_view) {
+    public DownloadWebPageTask(Context context, Fragment fragment) {
         this.context = context;
-        this.list_view = list_view;
+        this.fragment = fragment;
     }
 
     @Override
@@ -69,8 +71,10 @@ public class DownloadWebPageTask extends AsyncTask<String, Void, String> {
             Toast toast = Toast.makeText(context, result, duration);
             toast.show();
         }
-        ListAdapter my_adapter = new MyAdapter(context, entries);
-        list_view.setAdapter(my_adapter);
+
+        ListAdapter my_adapter = new ListItemAdapter(context, entries);
+        ListView view = (ListView) fragment.getView().findViewById(R.id.list);
+        view.setAdapter(my_adapter);
     }
 
     // Given a URL, establishes an HttpUrlConnection and retrieves
@@ -86,12 +90,27 @@ public class DownloadWebPageTask extends AsyncTask<String, Void, String> {
             conn.setConnectTimeout(15000 /* milliseconds */);
             conn.setRequestMethod("GET");
             conn.setDoInput(true);
-            // Starts the query
+
+            // Start the connection
             conn.connect();
-            String encoding = conn.getContentEncoding();
-            Log.i("Encoding:", "" + encoding);
-            int response = conn.getResponseCode();
-            Log.i("Connection", "The response is: " + response);
+            long date = conn.getLastModified();
+
+            SharedPreferences shared_preferences;
+            shared_preferences = context.getSharedPreferences("prefs", Context.MODE_PRIVATE);
+
+            if (shared_preferences.contains("date")) {
+                long cached_XML_date = shared_preferences.getLong("date", 0);
+                if (date <= cached_XML_date) {
+                    // Don't download the xml file again
+                    System.out.println("Not downloading the file again");
+                    return;
+                }
+            }
+            System.out.println("Downloading XML file");
+            // There is a new version of the xml file online
+            // Or it is the first time opening the app
+            shared_preferences.edit().putLong("date", date).commit();
+
             is = conn.getInputStream();
 
             File file = new File(context.getCacheDir(), FILE_NAME);
@@ -103,15 +122,12 @@ public class DownloadWebPageTask extends AsyncTask<String, Void, String> {
             while ( (bufferLength = is.read(buffer)) > 0 ) {
                 fileOutput.write(buffer, 0, bufferLength);
             }
-
             fileOutput.close();
-
         } finally {
             // Makes sure that the InputStream is closed after the app is
             // finished using it.
             if (is != null) {
                 is.close();
-
             }
         }
     }
@@ -157,16 +173,14 @@ public class DownloadWebPageTask extends AsyncTask<String, Void, String> {
         } finally {
             is.close();
         }
-        Log.i("entries", "" + entries);
         return entries;
     }
 
-    private ArrayList<String> getItem(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private ArrayList<String> getItem(XmlPullParser parser)
+            throws XmlPullParserException, IOException {
         ArrayList<String> items = new ArrayList<String>();
         parser.require(XmlPullParser.START_TAG, null, "item");
         String title;
-        String link = null;
-        String pub_date = null;
         String guid;
         String content;
 
@@ -188,11 +202,11 @@ public class DownloadWebPageTask extends AsyncTask<String, Void, String> {
                 skip(parser);
             }
         }
-        Log.i("items", "" + items);
         return items;
     }
 
-    private String getFromTag(XmlPullParser parser, String tag) throws IOException, XmlPullParserException {
+    private String getFromTag(XmlPullParser parser, String tag)
+            throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, null, tag);
         String text = readText(parser);
         parser.require(XmlPullParser.END_TAG, null, tag);

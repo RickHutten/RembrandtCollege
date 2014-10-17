@@ -9,7 +9,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 
@@ -19,10 +18,11 @@ public class NewsActivity extends ActionBarActivity {
     final private static String REMBRANDT_URL = "http://www.rembrandt-college.nl";
     final private static String FACEBOOK_URL = "https://www.facebook.com/RembrandtCollege";
     final private static String TWITTER_URL = "https://twitter.com/Rembrandt_Coll";
+    final private static String MAGISTER_URL = "https://rembrandt.swp.nl/5.6.25/Magister.aspx";
+    final private static String ITSLEARNING_URL = "http://itslearning.mobi/logOn/logOn.aspx?ReturnUrl=%2f";
 
     protected DrawerLayout drawer_layout;
     private ActionBarDrawerToggle drawer_toggle;
-    ListView list_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +71,31 @@ public class NewsActivity extends ActionBarActivity {
             }
         });
 
-        list_view = (ListView) findViewById(R.id.list);
-        DownloadWebPageTask download_web_page_task = new DownloadWebPageTask(this, list_view);
+        RelativeLayout magister_knop = (RelativeLayout) findViewById(R.id.magister_knop);
+        magister_knop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startInternetActivity(MAGISTER_URL);
+            }
+        });
+
+        RelativeLayout itslearning_knop = (RelativeLayout) findViewById(R.id.itslearning_knop);
+        itslearning_knop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startInternetActivity(ITSLEARNING_URL);
+            }
+        });
+
+        android.support.v4.app.FragmentTransaction fragment_transition = getSupportFragmentManager().beginTransaction();
+        rickhutten.rembrandtcollege.ListFragment list_fragment = new rickhutten.rembrandtcollege.ListFragment();
+        fragment_transition.add(R.id.content_frame, list_fragment);
+        fragment_transition.commit();
+
+        DownloadWebPageTask download_web_page_task = new DownloadWebPageTask(this, list_fragment);
         download_web_page_task.execute(XML_URL);
     }
+
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
