@@ -1,13 +1,17 @@
 package rickhutten.rembrandtcollege;
 
+import android.os.Bundle;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.util.Xml;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -29,8 +33,8 @@ public class DownloadWebPageTask extends AsyncTask<String, Void, String> {
 
     final private static String FILE_NAME = "XML";
 
-    Fragment fragment;
     Context context;
+    Fragment fragment;
     ArrayList<ArrayList<String>> entries = new ArrayList<ArrayList<String>>();
     XmlPullParser parser;
 
@@ -55,7 +59,7 @@ public class DownloadWebPageTask extends AsyncTask<String, Void, String> {
             msg = context.getResources().getString(R.string.no_internet_connection);
         }
         try {
-            entries = Entries();
+            entries = getEntries();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -72,9 +76,34 @@ public class DownloadWebPageTask extends AsyncTask<String, Void, String> {
             toast.show();
         }
 
-        ListAdapter my_adapter = new ListItemAdapter(context, entries);
-        ListView view = (ListView) fragment.getView().findViewById(R.id.list);
-        view.setAdapter(my_adapter);
+        ListAdapter adapter = new ListItemAdapter(context, entries);
+
+        try {
+            ListView list_view = (ListView) fragment.getView().findViewById(R.id.list);
+
+
+            System.out.println("Set Adapter");
+            list_view.setAdapter(adapter);
+
+            list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    FragmentTransaction fragment_transaction = fragment.getFragmentManager().beginTransaction();
+                    fragment_transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,
+                            R.anim.slide_in_left, R.anim.slide_out_right);
+                    DetailFragment detail_fragment = new DetailFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putStringArrayList("item", entries.get(position));
+                    detail_fragment.setArguments(bundle);
+                    fragment_transaction.replace(R.id.content_frame, detail_fragment);
+                    fragment_transaction.addToBackStack(null);
+                    fragment_transaction.commit();
+                }
+            });
+        } catch (NullPointerException e) {
+            System.out.println("NullPointerException");
+        }
     }
 
     // Given a URL, establishes an HttpUrlConnection and retrieves
@@ -82,7 +111,6 @@ public class DownloadWebPageTask extends AsyncTask<String, Void, String> {
     // a string.
     private void downloadFromUrl(String url_string) throws IOException {
         InputStream is = null;
-
         try {
             URL url = new URL(url_string);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -139,7 +167,7 @@ public class DownloadWebPageTask extends AsyncTask<String, Void, String> {
         return (networkInfo != null && networkInfo.isConnected());
     }
 
-    private ArrayList<ArrayList<String>> Entries() throws XmlPullParserException, IOException {
+    private ArrayList<ArrayList<String>> getEntries() throws XmlPullParserException, IOException {
 
         ArrayList<ArrayList<String>> entries = new ArrayList<ArrayList<String>>();
         File file = new File(context.getCacheDir(), FILE_NAME);

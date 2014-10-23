@@ -2,17 +2,12 @@ package rickhutten.rembrandtcollege;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Point;
-import android.media.Image;
 import android.text.Html;
 import android.text.Spanned;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.BaseAdapter;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 

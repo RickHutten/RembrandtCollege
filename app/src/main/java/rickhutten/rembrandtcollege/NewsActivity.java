@@ -3,18 +3,20 @@ package rickhutten.rembrandtcollege;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 
 
 public class NewsActivity extends ActionBarActivity {
 
-    final private static String XML_URL = "http://www.rembrandt-college.nl/rss.php";
     final private static String REMBRANDT_URL = "http://www.rembrandt-college.nl";
     final private static String FACEBOOK_URL = "https://www.facebook.com/RembrandtCollege";
     final private static String TWITTER_URL = "https://twitter.com/Rembrandt_Coll";
@@ -23,6 +25,46 @@ public class NewsActivity extends ActionBarActivity {
 
     protected DrawerLayout drawer_layout;
     private ActionBarDrawerToggle drawer_toggle;
+    float down_point_x;
+    float down_point_y;
+
+    Handler handler = new Handler();
+    Runnable runnable;
+
+    View.OnTouchListener touch_listener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(final View view, MotionEvent arg1) {
+            switch (arg1.getAction()) {
+                case MotionEvent.ACTION_DOWN: {
+                    down_point_x = arg1.getX();
+                    down_point_y = arg1.getY();
+                    runnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            view.setBackgroundResource(R.color.blue);
+                        }
+                    };
+                    handler.postDelayed(runnable, 50);
+                    break;
+                }
+                case MotionEvent.ACTION_CANCEL:
+                case MotionEvent.ACTION_UP:{
+                    handler.removeCallbacks(runnable);
+                    float up_point_x = arg1.getX();
+                    float up_point_y = arg1.getY();
+                    view.setBackgroundResource(R.color.white);
+                    // The difference between up and down can be 20 pixels max
+                    final int TAP_SIZE = (int) getResources().getDimension(R.dimen.tap_size);
+                    if (TAP_SIZE > Math.abs(down_point_x-up_point_x) &&
+                            TAP_SIZE > Math.abs(down_point_y-up_point_y)) {
+                        startInternetActivity((String) view.getTag());
+                    }
+                    break;
+                }
+            }
+            return true;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,61 +89,45 @@ public class NewsActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        RelativeLayout rembrandt_knop = (RelativeLayout) findViewById(R.id.rembrandt_knop);
-        rembrandt_knop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startInternetActivity(REMBRANDT_URL);
-            }
-        });
+        final RelativeLayout rembrandt_knop = (RelativeLayout) findViewById(R.id.rembrandt_knop);
+        rembrandt_knop.setTag(REMBRANDT_URL);
+        rembrandt_knop.setOnTouchListener(touch_listener);
 
         RelativeLayout facebook_knop = (RelativeLayout) findViewById(R.id.facebook_knop);
-        facebook_knop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startInternetActivity(FACEBOOK_URL);
-            }
-        });
+        facebook_knop.setTag(FACEBOOK_URL);
+        facebook_knop.setOnTouchListener(touch_listener);
 
         RelativeLayout twitter_knop = (RelativeLayout) findViewById(R.id.twitter_knop);
-        twitter_knop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startInternetActivity(TWITTER_URL);
-            }
-        });
+        twitter_knop.setTag(TWITTER_URL);
+        twitter_knop.setOnTouchListener(touch_listener);
 
         RelativeLayout magister_knop = (RelativeLayout) findViewById(R.id.magister_knop);
-        magister_knop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startInternetActivity(MAGISTER_URL);
-            }
-        });
+        magister_knop.setTag(MAGISTER_URL);
+        magister_knop.setOnTouchListener(touch_listener);
 
         RelativeLayout itslearning_knop = (RelativeLayout) findViewById(R.id.itslearning_knop);
-        itslearning_knop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startInternetActivity(ITSLEARNING_URL);
-            }
-        });
+        itslearning_knop.setTag(ITSLEARNING_URL);
+        itslearning_knop.setOnTouchListener(touch_listener);
 
-        android.support.v4.app.FragmentTransaction fragment_transition = getSupportFragmentManager().beginTransaction();
-        rickhutten.rembrandtcollege.ListFragment list_fragment = new rickhutten.rembrandtcollege.ListFragment();
-        fragment_transition.add(R.id.content_frame, list_fragment);
-        fragment_transition.commit();
-
-        DownloadWebPageTask download_web_page_task = new DownloadWebPageTask(this, list_fragment);
-        download_web_page_task.execute(XML_URL);
+        if (getSupportFragmentManager().getFragments() == null) {
+            FragmentTransaction fragment_transaction = getSupportFragmentManager().beginTransaction();
+            ListFragment list_fragment = new ListFragment();
+            fragment_transaction.add(R.id.content_frame, list_fragment);
+            fragment_transaction.commit();
+        }
     }
-
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
         drawer_toggle.syncState();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     @Override

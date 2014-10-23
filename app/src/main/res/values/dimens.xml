@@ -8,4 +8,5 @@
     <dimen name="navigation_drawer_image_width">54dp</dimen>
     <dimen name="navigation_drawer_image_height">54dp</dimen>
     <dimen name="navigation_drawer_image_margin">9dp</dimen>
+    <dimen name="tap_size">15dp</dimen>
 </resources>
