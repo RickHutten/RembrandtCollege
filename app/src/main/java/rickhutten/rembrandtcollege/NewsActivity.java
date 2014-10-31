@@ -41,7 +41,7 @@ public class NewsActivity extends ActionBarActivity {
                     runnable = new Runnable() {
                         @Override
                         public void run() {
-                            view.setBackgroundResource(R.color.blue);
+                            view.setBackgroundResource(R.color.background_blue);
                         }
                     };
                     handler.postDelayed(runnable, 50);
@@ -89,7 +89,7 @@ public class NewsActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        final RelativeLayout rembrandt_knop = (RelativeLayout) findViewById(R.id.rembrandt_knop);
+        RelativeLayout rembrandt_knop = (RelativeLayout) findViewById(R.id.rembrandt_knop);
         rembrandt_knop.setTag(REMBRANDT_URL);
         rembrandt_knop.setOnTouchListener(touch_listener);
 
@@ -112,6 +112,9 @@ public class NewsActivity extends ActionBarActivity {
         if (getSupportFragmentManager().getFragments() == null) {
             FragmentTransaction fragment_transaction = getSupportFragmentManager().beginTransaction();
             ListFragment list_fragment = new ListFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("onCreate", null);
+            list_fragment.setArguments(bundle);
             fragment_transaction.add(R.id.content_frame, list_fragment);
             fragment_transaction.commit();
         }

@@ -24,10 +24,12 @@ public class ListItemAdapter extends BaseAdapter {
 
     Context context;
     ArrayList<ArrayList<String>> entries;
+    int entries_size;
 
     public ListItemAdapter (Context context, ArrayList<ArrayList<String>> entries) {
         this.context = context;
         this.entries = entries;
+        entries_size = entries.size();
     }
 
     @Override
@@ -47,6 +49,7 @@ public class ListItemAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convert_view, ViewGroup parent) {
+        position = entries_size - position - 1;
         if (convert_view == null) {
             // Inflate layout
             LayoutInflater layout_inflater = ((Activity)context).getLayoutInflater();
@@ -58,7 +61,9 @@ public class ListItemAdapter extends BaseAdapter {
 
         Picasso picasso = Picasso.with(context);
         RequestCreator request_creator = picasso.load(url);
-        request_creator.fit().centerCrop().into(image_view);
+        request_creator.fit().centerCrop()
+                .placeholder(context.getResources().getDrawable(R.drawable.zandloper))
+                .into(image_view);
 
         TextView text_view = (TextView) convert_view.findViewById(R.id.adapter_title);
 

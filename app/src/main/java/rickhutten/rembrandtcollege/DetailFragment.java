@@ -46,7 +46,9 @@ public class DetailFragment extends Fragment {
 
         Picasso picasso = Picasso.with(getActivity());
         RequestCreator request_creator = picasso.load(url);
-        request_creator.fit().centerCrop().into(image_view);
+        request_creator.fit().centerCrop()
+                .placeholder(getActivity().getResources().getDrawable(R.drawable.zandloper))
+                .into(image_view);
 
         return view;
     }
