@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Handler;
-import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 public class NewsActivity extends ActionBarActivity {
 
     final private static String REMBRANDT_URL = "http://www.rembrandt-college.nl";
+    final private static String FACEBOOK_APP_URL = "fb://profile/593801583967937";
     final private static String FACEBOOK_URL = "https://www.facebook.com/RembrandtCollege";
     final private static String TWITTER_URL = "https://twitter.com/Rembrandt_Coll";
     final private static String MAGISTER_URL = "https://rembrandt.swp.nl/5.6.25/Magister.aspx";
@@ -57,7 +58,16 @@ public class NewsActivity extends ActionBarActivity {
                     final int TAP_SIZE = (int) getResources().getDimension(R.dimen.tap_size);
                     if (TAP_SIZE > Math.abs(down_point_x-up_point_x) &&
                             TAP_SIZE > Math.abs(down_point_y-up_point_y)) {
-                        startInternetActivity((String) view.getTag());
+                        if (view.getTag().equals(FACEBOOK_APP_URL)) {
+                            try{
+                                startInternetActivity((String) view.getTag());
+                            } catch (Exception e){
+                                // Facebook app is not found
+                                startInternetActivity(FACEBOOK_URL);
+                            }
+                        } else {
+                            startInternetActivity((String) view.getTag());
+                        }
                     }
                     break;
                 }
@@ -69,11 +79,11 @@ public class NewsActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_news);
 
         drawer_layout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer_toggle = new ActionBarDrawerToggle(this, drawer_layout, R.drawable.ic_drawer_dark,
-                0, 0) {
+        drawer_toggle = new ActionBarDrawerToggle(this, drawer_layout, 0, 0) {
 
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
@@ -83,6 +93,7 @@ public class NewsActivity extends ActionBarActivity {
                 super.onDrawerOpened(drawerView);
             }
         };
+
         // Set the drawer toggle as the DrawerListener
         drawer_layout.setDrawerListener(drawer_toggle);
 
@@ -94,7 +105,7 @@ public class NewsActivity extends ActionBarActivity {
         rembrandt_knop.setOnTouchListener(touch_listener);
 
         RelativeLayout facebook_knop = (RelativeLayout) findViewById(R.id.facebook_knop);
-        facebook_knop.setTag(FACEBOOK_URL);
+        facebook_knop.setTag(FACEBOOK_APP_URL);
         facebook_knop.setOnTouchListener(touch_listener);
 
         RelativeLayout twitter_knop = (RelativeLayout) findViewById(R.id.twitter_knop);
@@ -142,6 +153,7 @@ public class NewsActivity extends ActionBarActivity {
     public void startInternetActivity(String url) {
         drawer_layout.closeDrawers();
         Intent internet_intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        //sendBroadcast(internet_intent);
         NewsActivity.this.startActivity(internet_intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
@@ -158,5 +170,3 @@ public class NewsActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 }
-
-

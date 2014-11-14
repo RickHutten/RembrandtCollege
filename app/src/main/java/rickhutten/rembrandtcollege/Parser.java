@@ -41,7 +41,7 @@ public class Parser{
     private ArrayList<ArrayList<String>> getEntries() throws XmlPullParserException, IOException {
 
         ArrayList<ArrayList<String>> entries = new ArrayList<ArrayList<String>>();
-        File file = new File(context.getCacheDir(), FILE_NAME);
+        File file = new File(context.getFilesDir(), FILE_NAME);
         InputStream is = new FileInputStream(file);
         try {
             XmlPullParserFactory xml_pull_parser_factory = XmlPullParserFactory.newInstance();
@@ -82,6 +82,7 @@ public class Parser{
         String title;
         String guid;
         String content;
+        String pub_date;
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -97,6 +98,9 @@ public class Parser{
             } else if (name.equals("content:encoded")) {
                 content = getFromTag(parser, "content:encoded");
                 items.add(content);
+            } else if (name.equals("pubDate")) {
+                pub_date = getFromTag(parser, "pubDate");
+                items.add(pub_date);
             } else {
                 skip(parser);
             }

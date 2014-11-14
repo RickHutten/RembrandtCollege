@@ -30,10 +30,12 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         swipe_layout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         swipe_layout.setOnRefreshListener(this);
-        swipe_layout.setColorSchemeResources(R.color.refresh_1,
+        swipe_layout.setSize(SwipeRefreshLayout.DEFAULT);
+        swipe_layout.setColorSchemeResources(
+                R.color.refresh_1,
                 R.color.refresh_2,
                 R.color.refresh_3,
-                R.color.refresh_4 );
+                R.color.refresh_4);
 
         Bundle bundle = this.getArguments();
 
@@ -43,7 +45,7 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             Parser parser = new Parser(getActivity(), this);
             setAdapter(parser.parseXml());
             refresh();
-        } else if (new File(getActivity().getCacheDir(), FILE_NAME).exists() ) {
+        } else if (new File(getActivity().getFilesDir(), FILE_NAME).exists() ) {
             System.out.println("Not refreshing");
             Parser parser = new Parser(getActivity(), this);
             setAdapter(parser.parseXml());

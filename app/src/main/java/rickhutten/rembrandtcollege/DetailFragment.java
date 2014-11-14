@@ -21,7 +21,8 @@ public class DetailFragment extends Fragment {
 
     private static final int TITLE = 0;
     private static final int GUID = 1;
-    private static final int DESCRIPTION = 2;
+    private static final int DESCRIPTION = 3;
+    private static final int PUBDATE = 2;
     private static final String URL_START = "http://www.rembrandt-college.nl/_db/news/";
 
     @Override
@@ -36,12 +37,17 @@ public class DetailFragment extends Fragment {
         Spanned title_clean = Html.fromHtml(item.get(TITLE));
         title_text.setText(title_clean);
 
+        TextView date_text = (TextView) view.findViewById(R.id.detail_date);
+        String date_clean = "" + Html.fromHtml(item.get(PUBDATE));
+        String formatted_date = formatDate(date_clean);
+        date_text.setText(formatted_date);
+
         TextView description_text = (TextView) view.findViewById(R.id.detail_text);
-        Spanned description_clean = Html.fromHtml(item.get(DESCRIPTION));
+        String description_with_linebreaks = item.get(DESCRIPTION).replace("\n", "<br/>");
+        Spanned description_clean = Html.fromHtml(description_with_linebreaks);
         description_text.setText(description_clean);
 
         ImageView image_view = (ImageView) view.findViewById(R.id.detail_image);
-
         String url = URL_START + item.get(GUID) + ".jpg";
 
         Picasso picasso = Picasso.with(getActivity());
@@ -51,5 +57,34 @@ public class DetailFragment extends Fragment {
                 .into(image_view);
 
         return view;
+    }
+
+    private String formatDate(String date) {
+        String[] date_array = date.split(" ");
+        String day = date_array[0];
+        String day_no = date_array[1];
+        String month = date_array[2];
+        String year = date_array[3];
+
+        month = month.toLowerCase();
+
+        // Translating
+        if (month.equals("mar"))  {month = "mrt";}
+        if (month.equals("may"))  {month = "mei";}
+        if (month.equals("june")) {month = "jun";}
+        if (month.equals("july")) {month = "jul";}
+        if (month.equals("sept")) {month = "sep";}
+        if (month.equals("oct"))  {month = "okt";}
+
+        if (day.equals("Mon,"))   {day = "Ma,";}
+        if (day.equals("Tue,"))   {day = "Di,";}
+        if (day.equals("Wed,"))   {day = "Wo,";}
+        if (day.equals("Thu,"))   {day = "Do,";}
+        if (day.equals("Fri,"))   {day = "Vr,";}
+        if (day.equals("Sat,"))   {day = "Za,";}
+        if (day.equals("Sun,"))   {day = "Zo,";}
+
+        if (day_no.startsWith("0")) {day_no = day_no.replace("0", "");}
+        return day + " " + day_no + " " + month + ". " + year;
     }
 }

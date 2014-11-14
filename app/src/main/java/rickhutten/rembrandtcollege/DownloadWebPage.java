@@ -108,7 +108,7 @@ public class DownloadWebPage extends AsyncTask<String, Void, String> {
 
             is = conn.getInputStream();
 
-            File file = new File(context.getCacheDir(), FILE_NAME);
+            File file = new File(context.getFilesDir(), FILE_NAME);
             FileOutputStream fileOutput = new FileOutputStream(file);
 
             byte[] buffer = new byte[1024];
