@@ -8,4 +8,6 @@
     <string name="facebook">Facebook</string>
     <string name="magister">Magister</string>
     <string name="itslearning">itslearning</string>
+    <string name="notification_title">Rembrandt College</string>
+    <string name="notification_text">Bericht van het Rembrandt College!</string>
 </resources>

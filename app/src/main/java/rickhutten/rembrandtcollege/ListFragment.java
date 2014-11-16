@@ -95,4 +95,10 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void onRefresh() {
         refresh();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        refresh();
+    }
 }

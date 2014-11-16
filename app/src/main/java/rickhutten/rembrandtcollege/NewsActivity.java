@@ -1,6 +1,10 @@
 package rickhutten.rembrandtcollege;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Handler;
@@ -14,6 +18,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import java.util.Calendar;
+
 
 public class NewsActivity extends ActionBarActivity {
 
@@ -26,8 +32,9 @@ public class NewsActivity extends ActionBarActivity {
 
     protected DrawerLayout drawer_layout;
     private ActionBarDrawerToggle drawer_toggle;
-    float down_point_x;
-    float down_point_y;
+    private float down_point_x;
+    private float down_point_y;
+    public SharedPreferences shared_preferences;
 
     Handler handler = new Handler();
     Runnable runnable;
@@ -142,6 +149,8 @@ public class NewsActivity extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
         this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        shared_preferences = getSharedPreferences("prefs", Context.MODE_PRIVATE);
+        shared_preferences.edit().putBoolean("in_foreground", true).commit();
     }
 
     @Override
@@ -153,7 +162,6 @@ public class NewsActivity extends ActionBarActivity {
     public void startInternetActivity(String url) {
         drawer_layout.closeDrawers();
         Intent internet_intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        //sendBroadcast(internet_intent);
         NewsActivity.this.startActivity(internet_intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
@@ -168,5 +176,42 @@ public class NewsActivity extends ActionBarActivity {
         // Handle your other action bar items...
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        shared_preferences = getSharedPreferences("prefs", Context.MODE_PRIVATE);
+        shared_preferences.edit().putBoolean("in_foreground", false).commit();
+        System.out.println("Alarm set");
+        // Set the alarm to start at approx 14:00
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 14);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        long repeat_time = AlarmManager.INTERVAL_DAY;
+
+        long time_now = System.currentTimeMillis();
+        long next_alarm_time = calendar.getTimeInMillis();
+        if (time_now < next_alarm_time) {
+            // The alarm has yet to go off
+            // No need to change the alarm time
+            System.out.println("The alarm has yet to go off");
+        } else {
+            // The alarm should have already gone off
+            // change the next_alarm_time
+            System.out.println("The alarm should have already gone off");
+            next_alarm_time = next_alarm_time + repeat_time;
+        }
+
+        AlarmManager alarm_manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, NotificationReceiver.class);
+        PendingIntent alarm_intent = PendingIntent.getBroadcast(
+                this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        alarm_manager.setRepeating(AlarmManager.RTC, next_alarm_time,
+                repeat_time, alarm_intent);
     }
 }
