@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- permission required to use Alarm Manager -->
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
+    <!-- permission required to set Alarm Manager on boot -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
         android:allowBackup="true"
@@ -14,7 +16,11 @@
         android:largeHeap="true"
         android:theme="@style/AppTheme" >
         <!-- Register the Alarm Receiver -->
-        <receiver android:name="rickhutten.rembrandtcollege.NotificationReceiver"/>
+        <receiver android:name="rickhutten.rembrandtcollege.NotificationReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
         <activity
             android:name=".NewsActivity"
             android:label="@string/app_name" >

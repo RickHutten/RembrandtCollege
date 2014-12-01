@@ -11,7 +11,6 @@ import android.support.v4.app.NotificationCompat;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
 
 public class CheckVersion extends AsyncTask<String, Boolean, Boolean>{
 
@@ -38,11 +37,11 @@ public class CheckVersion extends AsyncTask<String, Boolean, Boolean>{
         } else {
             in_foreground = false;
         }
+
         if (!in_foreground) {
             System.out.println("Not in foreground check if new version");
 
             if (new_version) {
-
                 System.out.println("New version available, show notification");
                 long when = System.currentTimeMillis();
                 NotificationManager notificationManager = (NotificationManager) context

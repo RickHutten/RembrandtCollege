@@ -138,11 +138,46 @@ public class NewsActivity extends ActionBarActivity {
         }
     }
 
+    public void setAlarm(Context context) {
+        System.out.println("Alarm set");
+        // Set the alarm to start at approx 14:00
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 17);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        //long repeat_time = AlarmManager.INTERVAL_DAY;
+        long repeat_time = AlarmManager.INTERVAL_DAY;
+
+        long time_now = System.currentTimeMillis();
+        long next_alarm_time = calendar.getTimeInMillis();
+        if (time_now < next_alarm_time) {
+            // The alarm has yet to go off
+            // No need to change the alarm time
+            System.out.println("The alarm has yet to go off");
+        } else {
+            // The alarm should have already gone off
+            // change the next_alarm_time
+            System.out.println("The alarm should have already gone off");
+            next_alarm_time = next_alarm_time + repeat_time;
+        }
+
+        AlarmManager alarm_manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, NotificationReceiver.class);
+        PendingIntent alarm_intent = PendingIntent.getBroadcast(
+                context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        alarm_manager.setRepeating(AlarmManager.RTC, next_alarm_time,
+                repeat_time, alarm_intent);
+    }
+
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
         drawer_toggle.syncState();
+        setAlarm(this);
     }
 
     @Override
@@ -183,35 +218,5 @@ public class NewsActivity extends ActionBarActivity {
         super.onPause();
         shared_preferences = getSharedPreferences("prefs", Context.MODE_PRIVATE);
         shared_preferences.edit().putBoolean("in_foreground", false).commit();
-        System.out.println("Alarm set");
-        // Set the alarm to start at approx 14:00
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 14);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-
-        long repeat_time = AlarmManager.INTERVAL_DAY;
-
-        long time_now = System.currentTimeMillis();
-        long next_alarm_time = calendar.getTimeInMillis();
-        if (time_now < next_alarm_time) {
-            // The alarm has yet to go off
-            // No need to change the alarm time
-            System.out.println("The alarm has yet to go off");
-        } else {
-            // The alarm should have already gone off
-            // change the next_alarm_time
-            System.out.println("The alarm should have already gone off");
-            next_alarm_time = next_alarm_time + repeat_time;
-        }
-
-        AlarmManager alarm_manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this, NotificationReceiver.class);
-        PendingIntent alarm_intent = PendingIntent.getBroadcast(
-                this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        alarm_manager.setRepeating(AlarmManager.RTC, next_alarm_time,
-                repeat_time, alarm_intent);
     }
 }
