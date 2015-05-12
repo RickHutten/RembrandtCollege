@@ -170,7 +170,7 @@ public class NewsActivity extends ActionBarActivity {
         PendingIntent alarm_intent = PendingIntent.getBroadcast(
                 context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        alarm_manager.setRepeating(AlarmManager.RTC, next_alarm_time,
+        alarm_manager.setInexactRepeating(AlarmManager.RTC, next_alarm_time,
                 repeat_time, alarm_intent);
     }
 
