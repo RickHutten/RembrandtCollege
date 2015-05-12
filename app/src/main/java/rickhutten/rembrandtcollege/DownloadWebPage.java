@@ -15,11 +15,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Calendar;
+import java.util.Date;
 
 public class DownloadWebPage extends AsyncTask<String, Void, String> {
 
     final private static String FILE_NAME = "XML";
-    final private static String XML_URL = "http://www.rembrandt-college.nl/rss.php";
+    final private static String XML_URL = "http://www.rembrandt-college.nl/rss2.php";
 
     Context context;
     Fragment fragment;
@@ -89,6 +91,11 @@ public class DownloadWebPage extends AsyncTask<String, Void, String> {
             // Start the connection
             conn.connect();
             long date = conn.getLastModified();
+
+            Calendar time = Calendar.getInstance();
+            time.setTimeInMillis(date);
+            Date date2 = time.getTime();
+            System.out.println("Last updatdated: " + date + ", " + date2);
 
             SharedPreferences shared_preferences;
             shared_preferences = context.getSharedPreferences("prefs", Context.MODE_PRIVATE);

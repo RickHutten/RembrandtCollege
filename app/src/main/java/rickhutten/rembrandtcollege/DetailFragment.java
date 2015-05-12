@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,21 +33,29 @@ public class DetailFragment extends Fragment {
         Bundle bundle = this.getArguments();
         ArrayList<String> item = bundle.getStringArrayList("item");
 
+        // Set the text for the title
         TextView title_text = (TextView) view.findViewById(R.id.detail_title);
         title_text.setTypeface(null, Typeface.BOLD);
         Spanned title_clean = Html.fromHtml(item.get(TITLE));
         title_text.setText(title_clean);
 
+        // Set the text for the date
         TextView date_text = (TextView) view.findViewById(R.id.detail_date);
         String date_clean = "" + Html.fromHtml(item.get(PUBDATE));
         String formatted_date = formatDate(date_clean);
         date_text.setText(formatted_date);
 
+        // Set the text for the large textview
         TextView description_text = (TextView) view.findViewById(R.id.detail_text);
-        String description_with_linebreaks = item.get(DESCRIPTION).replace("\n", "<br/>");
+        description_text.setMovementMethod(LinkMovementMethod.getInstance());
+
+        // Stupid shitdicks
+        String description_with_linebreaks = item.get(DESCRIPTION).replace("<p> </p>", "");
+
         Spanned description_clean = Html.fromHtml(description_with_linebreaks);
         description_text.setText(description_clean);
 
+        // Set the image in the imageview
         ImageView image_view = (ImageView) view.findViewById(R.id.detail_image);
         String url = URL_START + item.get(GUID) + ".jpg";
 

@@ -27,8 +27,10 @@ public class NewsActivity extends ActionBarActivity {
     final private static String FACEBOOK_APP_URL = "fb://profile/593801583967937";
     final private static String FACEBOOK_URL = "https://www.facebook.com/RembrandtCollege";
     final private static String TWITTER_URL = "https://twitter.com/Rembrandt_Coll";
-    final private static String MAGISTER_URL = "https://rembrandt.swp.nl/5.6.25/Magister.aspx";
-    final private static String ITSLEARNING_URL = "http://itslearning.mobi/logOn/logOn.aspx?ReturnUrl=%2f";
+//    final private static String MAGISTER_URL = "https://rembrandt.swp.nl/5.6.25/Magister.aspx"; // Doesn't work any more
+    final private static String MAGISTER_URL = "https://rembrandt.magister.net/";
+//    final private static String ITSLEARNING_URL = "http://itslearning.mobi/logOn/logOn.aspx?ReturnUrl=%2f"; // Doesn't work any more
+    final private static String ITSLEARNING_URL = "https://rembrandt.itslearning.com/";
 
     protected DrawerLayout drawer_layout;
     private ActionBarDrawerToggle drawer_toggle;
