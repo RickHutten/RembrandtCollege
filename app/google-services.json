@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "286562899558",
+    "firebase_url": "https://rembrandt-college.firebaseio.com",
+    "project_id": "rembrandt-college",
+    "storage_bucket": "rembrandt-college.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:286562899558:android:f096ad2add9d10b7",
+        "android_client_info": {
+          "package_name": "rickhutten.rembrandtcollege"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "286562899558-jqmfj03hlam4upsqsdgk7ni9ueflu71o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "rickhutten.rembrandtcollege",
+            "certificate_hash": "9a96aa7a5a7da1542336dcd26b842baa7cfb812f"
+          }
+        },
+        {
+          "client_id": "286562899558-qstrobtcqjou1jmpuf8v2rrpplqspksc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhP1SiuyI63NgzJodVdmeOduOY2rHb1dc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "286562899558-qstrobtcqjou1jmpuf8v2rrpplqspksc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -16,17 +16,17 @@ import com.squareup.picasso.RequestCreator;
 
 import java.util.ArrayList;
 
-public class ListItemAdapter extends BaseAdapter {
+class ListItemAdapter extends BaseAdapter {
 
     private static final int TITLE = 0;
     private static final int GUID = 1;
-    private static final String URL_START = "http://www.rembrandt-college.nl/_db/news/";
+    private static final String URL_START = "https://www.rembrandt-college.nl/_db/news/";
 
-    Context context;
-    ArrayList<ArrayList<String>> entries;
-    int entries_size;
+    private Context context;
+    private ArrayList<ArrayList<String>> entries;
+    private int entries_size;
 
-    public ListItemAdapter (Context context, ArrayList<ArrayList<String>> entries) {
+    ListItemAdapter(Context context, ArrayList<ArrayList<String>> entries) {
         this.context = context;
         this.entries = entries;
         entries_size = entries.size();
@@ -52,7 +52,7 @@ public class ListItemAdapter extends BaseAdapter {
         position = entries_size - position - 1;
         if (convert_view == null) {
             // Inflate layout
-            LayoutInflater layout_inflater = ((Activity)context).getLayoutInflater();
+            LayoutInflater layout_inflater = ((Activity) context).getLayoutInflater();
             convert_view = layout_inflater.inflate(R.layout.list_item_layout, parent, false);
         }
         ImageView image_view = (ImageView) convert_view.findViewById(R.id.adapter_image);

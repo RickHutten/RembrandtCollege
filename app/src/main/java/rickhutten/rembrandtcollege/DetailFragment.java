@@ -24,7 +24,7 @@ public class DetailFragment extends Fragment {
     private static final int GUID = 1;
     private static final int DESCRIPTION = 3;
     private static final int PUBDATE = 2;
-    private static final String URL_START = "http://www.rembrandt-college.nl/_db/news/";
+    private static final String URL_START = "https://www.rembrandt-college.nl/_db/news/";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

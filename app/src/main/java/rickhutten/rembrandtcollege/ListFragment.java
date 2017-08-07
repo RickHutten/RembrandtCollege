@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +13,19 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import rickhutten.rembrandtcollege.net.GETRequest;
+import rickhutten.rembrandtcollege.net.ResponseListener;
 
 
 public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
+    final private static String TAG = "ListFragment";
     final private static String FILE_NAME = "XML";
+    final private static String XML_URL = "https://www.rembrandt-college.nl/rss4.php";
 
     ListView list_view;
     SwipeRefreshLayout swipe_layout;
@@ -32,22 +40,22 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         swipe_layout.setOnRefreshListener(this);
         swipe_layout.setSize(SwipeRefreshLayout.DEFAULT);
         swipe_layout.setColorSchemeResources(
-                R.color.refresh_1,
-                R.color.refresh_2,
-                R.color.refresh_3,
-                R.color.refresh_4);
+                R.color.blue,
+                R.color.yellow,
+                R.color.green,
+                R.color.red);
 
         Bundle bundle = this.getArguments();
 
         if (bundle.containsKey("onCreate")) {
-            System.out.println("Called from onCreate in activity");
+            Log.i(TAG, "Called from onCreate in activity");
             bundle.clear();
-            Parser parser = new Parser(getActivity(), this);
+            Parser parser = new Parser(getActivity());
             setAdapter(parser.parseXml());
             refresh();
-        } else if (new File(getActivity().getFilesDir(), FILE_NAME).exists() ) {
-            System.out.println("Not refreshing");
-            Parser parser = new Parser(getActivity(), this);
+        } else if (new File(getActivity().getFilesDir(), FILE_NAME).exists()) {
+            Log.i(TAG, "Not refreshing");
+            Parser parser = new Parser(getActivity());
             setAdapter(parser.parseXml());
         } else {
             refresh();
@@ -59,16 +67,40 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         // This function downloads the XML file again and sets the adapter
         // (if new version is available)
         swipe_layout.setRefreshing(true);
-        System.out.println("Start refreshing anim");
-        System.out.println("Refreshing..");
-        DownloadWebPage download_web_page = new DownloadWebPage(getActivity(), this);
-        download_web_page.execute();
+        Log.i(TAG, "Start refreshing anim");
+        Log.i(TAG, "Refreshing..");
+        final ListFragment listFragment = this;
+        new GETRequest(XML_URL, new ResponseListener() {
+            @Override
+            public void onResponse(String response) {
+                File file = new File(getContext().getFilesDir(), FILE_NAME);
+                try {
+                    FileOutputStream fileOutput = new FileOutputStream(file);
+                    fileOutput.write(response.getBytes());
+                    fileOutput.close();
+
+                    // Parse file and set adapter again
+                    // need to run on UI thread to touch the views
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Parser parser = new Parser(getContext());
+                            listFragment.setAdapter(parser.parseXml());
+                        }
+                    });
+                } catch (IOException e) {
+                    // Not gonna happen but the IDE wants me to
+                    e.printStackTrace();
+                }
+
+            }
+        });
     }
 
     public void setAdapter(final ArrayList<ArrayList<String>> entries) {
 
         ListAdapter adapter = new ListItemAdapter(getActivity(), entries);
-        System.out.println("Set Adapter");
+        Log.i(TAG, "Set Adapter");
         list_view.setAdapter(adapter);
 
         list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -88,17 +120,11 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             }
         });
         swipe_layout.setRefreshing(false);
-        System.out.println("Stop refreshing anim");
+        Log.i(TAG, "Stop refreshing anim");
     }
 
     @Override
     public void onRefresh() {
-        refresh();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         refresh();
     }
 }

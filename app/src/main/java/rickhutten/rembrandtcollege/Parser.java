@@ -1,7 +1,6 @@
 package rickhutten.rembrandtcollege;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -14,21 +13,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-public class Parser{
+class Parser{
 
     final private static String FILE_NAME = "XML";
 
-    ArrayList<ArrayList<String>> entries = new ArrayList<ArrayList<String>>();
-    Context context;
-    Fragment fragment;
-    XmlPullParser parser;
+    private ArrayList<ArrayList<String>> entries = new ArrayList<>();
+    private Context context;
 
-    public Parser(Context context, Fragment fragment) {
+    Parser(Context context) {
         this.context = context;
-        this.fragment = fragment;
     }
 
-    public ArrayList<ArrayList<String>> parseXml() {
+    ArrayList<ArrayList<String>> parseXml() {
         try {
             entries = getEntries();
         } catch (Exception e) {
@@ -40,14 +36,14 @@ public class Parser{
 
     private ArrayList<ArrayList<String>> getEntries() throws XmlPullParserException, IOException {
 
-        ArrayList<ArrayList<String>> entries = new ArrayList<ArrayList<String>>();
+        ArrayList<ArrayList<String>> entries = new ArrayList<>();
         File file = new File(context.getFilesDir(), FILE_NAME);
         InputStream is = new FileInputStream(file);
         try {
             XmlPullParserFactory xml_pull_parser_factory = XmlPullParserFactory.newInstance();
             xml_pull_parser_factory.setValidating(false);
             xml_pull_parser_factory.setFeature(Xml.FEATURE_RELAXED, true);
-            parser = xml_pull_parser_factory.newPullParser();
+            XmlPullParser parser = xml_pull_parser_factory.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(is, null);
             parser.nextTag();
@@ -77,7 +73,7 @@ public class Parser{
 
     private ArrayList<String> getItem(XmlPullParser parser)
             throws XmlPullParserException, IOException {
-        ArrayList<String> items = new ArrayList<String>();
+        ArrayList<String> items = new ArrayList<>();
         parser.require(XmlPullParser.START_TAG, null, "item");
         String title;
         String guid;
@@ -89,20 +85,26 @@ public class Parser{
                 continue;
             }
             String name = parser.getName();
-            if (name.equals("title")) {
-                title = getFromTag(parser, "title");
-                items.add(title);
-            } else if (name.equals("guid")) {
-                guid = getFromTag(parser, "guid");
-                items.add(guid);
-            } else if (name.equals("content:encoded")) {
-                content = getFromTag(parser, "content:encoded");
-                items.add(content);
-            } else if (name.equals("pubDate")) {
-                pub_date = getFromTag(parser, "pubDate");
-                items.add(pub_date);
-            } else {
-                skip(parser);
+            switch (name) {
+                case "title":
+                    title = getFromTag(parser, "title");
+                    items.add(title);
+                    break;
+                case "guid":
+                    guid = getFromTag(parser, "guid");
+                    items.add(guid);
+                    break;
+                case "content:encoded":
+                    content = getFromTag(parser, "content:encoded");
+                    items.add(content);
+                    break;
+                case "pubDate":
+                    pub_date = getFromTag(parser, "pubDate");
+                    items.add(pub_date);
+                    break;
+                default:
+                    skip(parser);
+                    break;
             }
         }
         return items;
