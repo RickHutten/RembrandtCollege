@@ -12,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
-        android:dividerHeight="5dp"
-        android:divider="@color/white" />
+        android:divider="@null"/>
 
 </android.support.v4.widget.SwipeRefreshLayout>

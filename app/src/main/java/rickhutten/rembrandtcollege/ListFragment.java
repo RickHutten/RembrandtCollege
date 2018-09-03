@@ -25,7 +25,7 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     final private static String TAG = "ListFragment";
     final private static String FILE_NAME = "XML";
-    final private static String XML_URL = "https://www.rembrandt-college.nl/rss4.php";
+    final private static String XML_URL = "https://www.rembrandt-college.nl/rss2.php";
 
     ListView list_view;
     SwipeRefreshLayout swipe_layout;
@@ -34,9 +34,9 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.list_view, container, false);
-        list_view = (ListView) view.findViewById(R.id.list);
+        list_view = view.findViewById(R.id.list);
 
-        swipe_layout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        swipe_layout = view.findViewById(R.id.swipe_container);
         swipe_layout.setOnRefreshListener(this);
         swipe_layout.setSize(SwipeRefreshLayout.DEFAULT);
         swipe_layout.setColorSchemeResources(
@@ -52,18 +52,45 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             bundle.clear();
             Parser parser = new Parser(getActivity());
             setAdapter(parser.parseXml());
-            refresh();
+            onRefresh();
         } else if (new File(getActivity().getFilesDir(), FILE_NAME).exists()) {
             Log.i(TAG, "Not refreshing");
             Parser parser = new Parser(getActivity());
             setAdapter(parser.parseXml());
         } else {
-            refresh();
+            onRefresh();
         }
         return view;
     }
 
-    public void refresh() {
+    public void setAdapter(final ArrayList<ArrayList<String>> entries) {
+
+        ListAdapter adapter = new ListItemAdapter(getActivity(), entries);
+        Log.i(TAG, "Set Adapter");
+        list_view.setAdapter(adapter);
+
+        list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                position = entries.size() - position - 1;
+                FragmentTransaction fragment_transaction = getFragmentManager().beginTransaction();
+                fragment_transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,
+                        R.anim.slide_in_left, R.anim.slide_out_right);
+                DetailFragment detail_fragment = new DetailFragment();
+                Bundle bundle = new Bundle();
+                bundle.putStringArrayList("item", entries.get(position));
+                detail_fragment.setArguments(bundle);
+                fragment_transaction.replace(R.id.content_frame, detail_fragment);
+                fragment_transaction.addToBackStack(null);
+                fragment_transaction.commit();
+            }
+        });
+        swipe_layout.setRefreshing(false);
+        Log.i(TAG, "Stop refreshing anim");
+    }
+
+    @Override
+    public void onRefresh() {
         // This function downloads the XML file again and sets the adapter
         // (if new version is available)
         swipe_layout.setRefreshing(true);
@@ -95,36 +122,5 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
             }
         });
-    }
-
-    public void setAdapter(final ArrayList<ArrayList<String>> entries) {
-
-        ListAdapter adapter = new ListItemAdapter(getActivity(), entries);
-        Log.i(TAG, "Set Adapter");
-        list_view.setAdapter(adapter);
-
-        list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                position = entries.size() - position - 1;
-                FragmentTransaction fragment_transaction = getFragmentManager().beginTransaction();
-                fragment_transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,
-                        R.anim.slide_in_left, R.anim.slide_out_right);
-                DetailFragment detail_fragment = new DetailFragment();
-                Bundle bundle = new Bundle();
-                bundle.putStringArrayList("item", entries.get(position));
-                detail_fragment.setArguments(bundle);
-                fragment_transaction.replace(R.id.content_frame, detail_fragment);
-                fragment_transaction.addToBackStack(null);
-                fragment_transaction.commit();
-            }
-        });
-        swipe_layout.setRefreshing(false);
-        Log.i(TAG, "Stop refreshing anim");
-    }
-
-    @Override
-    public void onRefresh() {
-        refresh();
     }
 }

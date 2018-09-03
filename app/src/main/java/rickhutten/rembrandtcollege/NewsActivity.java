@@ -12,12 +12,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
-
-import com.google.firebase.iid.FirebaseInstanceId;
 
 
 public class NewsActivity extends AppCompatActivity {
@@ -35,6 +34,7 @@ public class NewsActivity extends AppCompatActivity {
     private ActionBarDrawerToggle drawer_toggle;
     private float down_point_x;
     private float down_point_y;
+
     View.OnTouchListener touch_listener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(final View view, MotionEvent arg1) {
@@ -82,10 +82,11 @@ public class NewsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_news);
 
-        drawer_layout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        Log.d("NewsActivity", "onCreate");
+
+        drawer_layout = findViewById(R.id.drawer_layout);
         drawer_toggle = new ActionBarDrawerToggle(this, drawer_layout, 0, 0) {
 
             public void onDrawerClosed(View view) {
@@ -98,7 +99,7 @@ public class NewsActivity extends AppCompatActivity {
         };
 
         // Set the drawer toggle as the DrawerListener
-        drawer_layout.setDrawerListener(drawer_toggle);
+        drawer_layout.addDrawerListener(drawer_toggle);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -108,40 +109,36 @@ public class NewsActivity extends AppCompatActivity {
 
         setTouchListeners();
 
-        if (getSupportFragmentManager().getFragments() == null) {
-            FragmentTransaction fragment_transaction = getSupportFragmentManager().beginTransaction();
-            ListFragment list_fragment = new ListFragment();
-            Bundle bundle = new Bundle();
-            bundle.putString("onCreate", null);
-            list_fragment.setArguments(bundle);
-            fragment_transaction.add(R.id.content_frame, list_fragment);
-            fragment_transaction.commit();
-        }
-
-        System.out.println("FirebaseInstanceId: " + FirebaseInstanceId.getInstance().getToken());
+        FragmentTransaction fragment_transaction = getSupportFragmentManager().beginTransaction();
+        ListFragment list_fragment = new ListFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("onCreate", null);
+        list_fragment.setArguments(bundle);
+        fragment_transaction.add(R.id.content_frame, list_fragment);
+        fragment_transaction.commit();
     }
 
     /**
      * Set touch listeners for the drawer layout
      */
     private void setTouchListeners() {
-        RelativeLayout rembrandt_knop = (RelativeLayout) findViewById(R.id.rembrandt_knop);
+        RelativeLayout rembrandt_knop = findViewById(R.id.rembrandt_knop);
         rembrandt_knop.setTag(REMBRANDT_URL);
         rembrandt_knop.setOnTouchListener(touch_listener);
 
-        RelativeLayout facebook_knop = (RelativeLayout) findViewById(R.id.facebook_knop);
+        RelativeLayout facebook_knop = findViewById(R.id.facebook_knop);
         facebook_knop.setTag(FACEBOOK_APP_URL);
         facebook_knop.setOnTouchListener(touch_listener);
 
-        RelativeLayout twitter_knop = (RelativeLayout) findViewById(R.id.twitter_knop);
+        RelativeLayout twitter_knop = findViewById(R.id.twitter_knop);
         twitter_knop.setTag(TWITTER_URL);
         twitter_knop.setOnTouchListener(touch_listener);
 
-        RelativeLayout magister_knop = (RelativeLayout) findViewById(R.id.magister_knop);
+        RelativeLayout magister_knop = findViewById(R.id.magister_knop);
         magister_knop.setTag(MAGISTER_URL);
         magister_knop.setOnTouchListener(touch_listener);
 
-        RelativeLayout itslearning_knop = (RelativeLayout) findViewById(R.id.itslearning_knop);
+        RelativeLayout itslearning_knop = findViewById(R.id.itslearning_knop);
         itslearning_knop.setTag(ITSLEARNING_URL);
         itslearning_knop.setOnTouchListener(touch_listener);
     }

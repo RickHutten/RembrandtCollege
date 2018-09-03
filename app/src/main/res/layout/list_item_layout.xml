@@ -1,28 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="@dimen/list_item_height" >
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/light_gray">
 
-    <ImageView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/adapter_image"
-        android:contentDescription="@null"
-        android:layout_marginStart="-10dp"
-        android:layout_marginEnd="-10dp"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:background="@drawable/black_background_gradient" />
-
-    <TextView
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/adapter_title"
-        android:padding="10dp"
-        android:layout_alignParentTop="true"
-        android:textColor="@color/white"
-        android:textSize="25sp"/>
+        android:background="@drawable/card"
+        android:layout_margin="12dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:id="@+id/adapter_image"
+            android:src="@drawable/error"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:layout_gravity="center"
+            android:background="@drawable/card"
+            android:contentDescription="@null"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/adapter_image"
+            android:id="@+id/adapter_title"
+            android:padding="12dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/adapter_title"
+            android:id="@+id/adapter_date"
+            android:textSize="12sp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="16dp"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>
