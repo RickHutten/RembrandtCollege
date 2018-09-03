@@ -17,6 +17,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 
 public class NewsActivity extends AppCompatActivity {
 
@@ -115,6 +117,8 @@ public class NewsActivity extends AppCompatActivity {
             fragment_transaction.add(R.id.content_frame, list_fragment);
             fragment_transaction.commit();
         }
+
+        System.out.println("FirebaseInstanceId: " + FirebaseInstanceId.getInstance().getToken());
     }
 
     /**
